@@ -1,0 +1,43 @@
+
+BASEDIR=$(CURDIR)
+INPUTDIR=$(BASEDIR)
+OUTPUTDIR=$(BASEDIR)
+TEMPLATEDIR=$(INPUTDIR)/templates
+STYLEDIR=$(BASEDIR)/style
+
+BIBFILE=$(INPUTDIR)/../library.bib
+MD2TEX='pandoc --bibliography="$(BIBFILE)" \
+        -V fontsize=12pt \
+        -V paper=a4paper \
+        -V documentclass=report \
+        -N \
+		--biblatex \
+		-f markdown-auto_identifiers'
+
+help:
+	@echo ' 																	  '
+	@echo 'Makefile for the Markdown thesis                                       '
+	@echo '                                                                       '
+	@echo 'Usage:                                                                 '
+	@echo '   make pdf                         generate a PDF file  			  '
+	@echo '   make tex	                       generate a Latex file 			  '
+	@echo ' 																	  '
+	@echo ' 																	  '
+
+tex:
+	eval $(MD2TEX)" \
+	-s $(INPUTDIR)"/fragment.md \
+	-o "$(OUTPUTDIR)/fragment.tex" 
+
+pdf:
+	eval $(MD2TEX) \
+	-s $(INPUTDIR)/fragment.md \
+	-o "$(OUTPUTDIR)/fragment.tex" 
+
+	pdflatex fragment.tex
+	biber fragment
+	pdflatex fragment.tex
+	pdflatex fragment.tex
+	rm fragment.log fragment.run.xml fragment.bcf fragment.out fragment.aux fragment.blg fragment.bbl fragment.tex
+
+.PHONY: help tex pdf
