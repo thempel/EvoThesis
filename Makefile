@@ -1,18 +1,10 @@
 
-BASEDIR=$(CURDIR)
-INPUTDIR=$(BASEDIR)
-OUTPUTDIR=$(BASEDIR)
-TEMPLATEDIR=$(INPUTDIR)/templates
-STYLEDIR=$(BASEDIR)/style
-
+INPUTDIR=$(CURDIR)
+OUTPUTDIR=$(INPUTDIR)
 BIBFILE=$(INPUTDIR)/library.bib
-MD2TEX='pandoc --bibliography="$(BIBFILE)" \
-        -V fontsize=12pt \
-        -V paper=a4paper \
-        -V documentclass=report \
-        -N \
-		--biblatex \
-		-f markdown-auto_identifiers'
+
+tmp:=$(shell readlink -fn $(INPUTDIR)/Makefile)
+SRCDIR=$(dir $(tmp))
 
 # check for index file
 INDEXFILE=$(INPUTDIR)/index
@@ -23,7 +15,6 @@ INFILES=$(INPUTDIR)/*/*.md
 endif
 
 help:
-	@echo $(INFILES)
 	@echo ' 																	  '
 	@echo 'Makefile for the Markdown thesis                                       '
 	@echo '                                                                       '
@@ -35,12 +26,14 @@ help:
 	@echo ' 																	  '
 
 tex:
-	eval $(MD2TEX) \
+	$(SRCDIR)/src/pandoc_tex.sh \
+	--bibliography="$(BIBFILE)" \
 	-s $(INFILES) \
 	-o "$(OUTPUTDIR)/thesis.tex" 
 
 pdf:
-	eval $(MD2TEX) \
+	$(SRCDIR)/src/pandoc_tex.sh \
+	--bibliography="$(BIBFILE)" \
 	-s $(INFILES) \
 	-o "$(OUTPUTDIR)/thesis.tex" 
 
