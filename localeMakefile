@@ -1,7 +1,15 @@
 
 INPUTDIR=$(CURDIR)
 OUTPUTDIR=$(INPUTDIR)
-BIBFILE=$(INPUTDIR)/library.bib
+
+# check for library file
+INDEXFILE=$(INPUTDIR)/index
+ifneq ("$(wildcard $(INPUTDIR)/../library.bib)","")
+BIBFILE=$(INPUTDIR)/../library.bib
+else
+BIBFILE=$(INPUTDIR)/../../library.bib
+endif
+
 
 tmp:=$(shell readlink -fn $(INPUTDIR)/Makefile)
 SRCDIR=$(dir $(tmp))
@@ -13,19 +21,27 @@ help:
 	@echo 'Usage:                                                                 '
 	@echo '   make pdf                         generate a PDF file  			  '
 	@echo '   make tex	                       generate a Latex file 			  '
+	@echo '   make docx						   generate MS word file			  '
 	@echo ' 																	  '
 	@echo ' 																	  '
 
 tex:
 	$(SRCDIR)/src/pandoc_tex.sh \
 	--bibliography="$(BIBFILE)" \
-	-s $(INPUTDIR)"/fragment.md \
+	-s "$(INPUTDIR)/*.md" \
 	-o "$(OUTPUTDIR)/fragment.tex" 
+
+docx:
+	$(SRCDIR)/src/pandoc_tex.sh \
+	--bibliography="$(BIBFILE)" \
+	-s "$(INPUTDIR)/*.md" \
+	-o "$(OUTPUTDIR)/fragment.docx" 
+
 
 pdf:
 	$(SRCDIR)/src/pandoc_tex.sh \
 	--bibliography="$(BIBFILE)" \
-	-s $(INPUTDIR)/fragment.md \
+	-s "$(INPUTDIR)/*.md" \
 	-o "$(OUTPUTDIR)/fragment.tex" 
 
 	pdflatex fragment.tex

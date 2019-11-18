@@ -43,16 +43,32 @@ pdf:
 	pdflatex thesis.tex
 	rm thesis.log thesis.run.xml thesis.bcf thesis.out thesis.aux thesis.blg thesis.bbl thesis.tex
 
-update:
+index:
 	if [ -f $(INDEXFILE) ]; then mv $(INDEXFILE) $(INDEXFILE).bak; fi	
 	touch $(INDEXFILE)
 	for folder in $(INPUTDIR)/*; do \
 		if [ -d $$folder ]; then \
 		cd $$folder; \
-		ln -sf ../../evothesis/localeMakefile Makefile; \
 		fname=$$folder/*.md; \
 		echo $$fname  >> $(INDEXFILE); \
 		fi; \
 		done
+	
+update:
+	for folder in $(INPUTDIR)/*; do \
+		if [ -d $$folder ]; then \
+		cd $$folder; \
+		ln -sf ../../evothesis/localeMakefile Makefile; \
+		for subfolder in ./*; do \
+		if [ -d $$subfolder ]; then \
+		cd $$subfolder; \
+		ln -sf ../../../evothesis/localeMakefile Makefile; \
+		cd ..; \
+		fi ; \
+		done ; \
+		cd ..; \
+		fi; \
+		done
+	git add -A
 
-.PHONY: help tex pdf update
+.PHONY: help tex pdf index update
