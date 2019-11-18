@@ -71,4 +71,7 @@ update:
 		done
 	git add -A
 
+update-evothesis:
+	git submodule foreach git pull
+
 .PHONY: help tex pdf index update
