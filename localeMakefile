@@ -3,15 +3,13 @@ INPUTDIR=$(CURDIR)
 OUTPUTDIR=$(INPUTDIR)
 
 # check for library file
-INDEXFILE=$(INPUTDIR)/index
 ifneq ("$(wildcard $(INPUTDIR)/../library.bib)","")
 BIBFILE=$(INPUTDIR)/../library.bib
 else
 BIBFILE=$(INPUTDIR)/../../library.bib
 endif
 
-
-tmp:=$(shell readlink -fn $(INPUTDIR)/Makefile)
+tmp:=$(shell readlink -fn "$(INPUTDIR)/Makefile")
 SRCDIR=$(dir $(tmp))
 
 help:

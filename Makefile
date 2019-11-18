@@ -56,12 +56,12 @@ index:
 	
 update:
 	for folder in $(INPUTDIR)/*; do \
-		if [ -d $$folder ]; then \
-		cd $$folder; \
+		if [ -d "$$folder" ]; then \
+		cd "$$folder"; \
 		ln -sf ../../evothesis/localeMakefile Makefile; \
 		for subfolder in ./*; do \
-		if [ -d $$subfolder ]; then \
-		cd $$subfolder; \
+		if [ -d "$$subfolder" ]; then \
+		cd "$$subfolder"; \
 		ln -sf ../../../evothesis/localeMakefile Makefile; \
 		cd ..; \
 		fi ; \
